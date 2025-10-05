@@ -1,0 +1,131 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Copy, Check, Download, FileSignature } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+export const SharePage = () => {
+  const { shareId } = useParams<{ shareId: string }>();
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  const [document, setDocument] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      if (!shareId) return;
+
+      try {
+        const { data, error } = await supabase
+          .from("documents")
+          .select("*")
+          .eq("share_id", shareId)
+          .single();
+
+        if (error) throw error;
+        setDocument(data);
+      } catch (error) {
+        console.error("Error fetching document:", error);
+        toast.error("找不到文件");
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocument();
+  }, [shareId, navigate]);
+
+  const handleCopyLink = async () => {
+    const url = `${window.location.origin}/sign/${shareId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      toast.success("連結已複製！");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error("Failed to copy:", error);
+      toast.error("複製失敗，請手動複製");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background py-12 px-4">
+      <div className="max-w-3xl mx-auto space-y-8">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"
+        >
+          <FileSignature className="w-8 h-8" />
+          <span className="font-bold text-xl">Sign PDF Easily</span>
+        </button>
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+            檔案上傳成功！
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            複製下方連結並分享給需要簽名的人
+          </p>
+        </div>
+
+        <Card className="p-8 space-y-6 shadow-xl border-2">
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-foreground">
+              檔案名稱
+            </label>
+            <div className="p-4 bg-muted rounded-lg">
+              <p className="font-mono text-foreground">{document?.file_name}</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-foreground">
+              分享連結
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                readOnly
+                value={`${window.location.origin}/sign/${shareId}`}
+                className="flex-1 p-4 bg-muted border border-border rounded-lg font-mono text-sm text-foreground"
+              />
+              <Button
+                onClick={handleCopyLink}
+                variant="outline"
+                className="gap-2 border-2"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    已複製
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    複製
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-border">
+            <p className="text-sm text-muted-foreground text-center">
+              ⏰ 此檔案將在 7 天後自動刪除
+            </p>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
