@@ -4,21 +4,21 @@ import { UploadSection } from "@/components/UploadSection";
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background">
-      <div className="container mx-auto px-4 py-12 max-w-5xl">
-        <header className="text-center mb-12 space-y-6">
-          <div className="flex justify-center">
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
+        <header className="text-center mb-8 space-y-4">
+          <div className="flex justify-center items-center gap-6">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
               <div className="relative bg-gradient-to-br from-primary to-primary-glow p-6 rounded-3xl shadow-2xl">
                 <FileSignature className="w-16 h-16 text-primary-foreground" />
               </div>
             </div>
-          </div>
-          
-          <div>
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent leading-tight pb-2">
               Sign PDF Easily
             </h1>
+          </div>
+
+          <div>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
               Secure, Simple, and Fast Online PDF Signing Platform
             </p>
