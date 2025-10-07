@@ -26,7 +26,6 @@ export const UploadSection = () => {
     setUploading(true);
 
     try {
-      // 確保用戶有 session（匿名登入）
       const { data: sessionData } = await supabase.auth.getSession();
       if (!sessionData.session) {
         const { error: authError } = await supabase.auth.signInAnonymously();
@@ -36,13 +35,11 @@ export const UploadSection = () => {
       const shareId = nanoid(16);
       const sharedFileName = `d${shareId}.pdf`;
 
-      // Upload file to storage
       const { error: uploadError } = await supabase.storage
         .from("pdfs")
         .upload(sharedFileName, file);
 
       if (uploadError) {
-        // 檢查是否為達到限制的錯誤
         if (uploadError.message.includes('policy')) {
           toast.error("您今日已達上傳限制（10次），請明天再試");
           return;
@@ -50,7 +47,6 @@ export const UploadSection = () => {
         throw uploadError;
       }
 
-      // Create document record
       const { error: dbError } = await supabase
         .from("documents")
         .insert({
@@ -64,7 +60,6 @@ export const UploadSection = () => {
       toast.success("檔案上傳成功！");
       navigate(`/share/${shareId}`);
     } catch (error) {
-      console.error("Upload error:", error);
       toast.error("上傳失敗，請重試");
     } finally {
       setUploading(false);

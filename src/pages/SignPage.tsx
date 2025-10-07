@@ -64,7 +64,6 @@ export const SignPage = () => {
 
         setPdfDocument(data);
       } catch (error) {
-        console.error("Error fetching document:", error);
         toast.error("找不到文件");
         navigate("/");
       } finally {
@@ -88,47 +87,34 @@ export const SignPage = () => {
       const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
       const { width: pdfWidth, height: pdfHeight } = page.getSize();
 
-      // 獲取頁面在螢幕上的實際渲染尺寸
       const pageElement = pageRefs.current.get(signature.page);
 
-      // 改進的尺寸獲取邏輯，支援手機版
       let renderedWidth = 0;
       let renderedHeight = 0;
 
       if (pageElement) {
-        // 嘗試多種方式獲取渲染尺寸
         const canvas = pageElement.querySelector('.react-pdf__Page__canvas') as HTMLCanvasElement;
         const pageDiv = pageElement.querySelector('.react-pdf__Page') as HTMLDivElement;
 
         if (canvas && canvas.clientWidth > 0) {
           renderedWidth = canvas.clientWidth;
           renderedHeight = canvas.clientHeight;
-          console.log(`使用 canvas 尺寸: ${renderedWidth}x${renderedHeight}`);
         } else if (pageDiv && pageDiv.clientWidth > 0) {
           renderedWidth = pageDiv.clientWidth;
           renderedHeight = pageDiv.clientHeight;
-          console.log(`使用 pageDiv 尺寸: ${renderedWidth}x${renderedHeight}`);
         } else if (pageElement.clientWidth > 0) {
           renderedWidth = pageElement.clientWidth;
           renderedHeight = pageElement.clientHeight;
-          console.log(`使用 pageElement 尺寸: ${renderedWidth}x${renderedHeight}`);
         }
       }
 
-      // 如果無法獲取渲染尺寸，使用 1:1 比例（不縮放）
-      // 這表示簽名位置已經是以 PDF 原始座標系統記錄的
       if (renderedWidth === 0 || renderedHeight === 0) {
-        console.warn(`無法獲取頁面 ${signature.page} 的渲染尺寸，假設 1:1 比例`);
         renderedWidth = pdfWidth;
         renderedHeight = pdfHeight;
       }
 
-      // 計算縮放比例
       const scaleX = pdfWidth / renderedWidth;
       const scaleY = pdfHeight / renderedHeight;
-
-      console.log(`頁面 ${signature.page} 縮放比例: scaleX=${scaleX}, scaleY=${scaleY}`);
-      console.log(`簽名位置: x=${signature.x}, y=${signature.y}, w=${signature.width}, h=${signature.height}`);
 
       page.drawImage(signatureImage, {
         x: signature.x * scaleX,
@@ -148,24 +134,15 @@ export const SignPage = () => {
     }
 
     try {
-      console.log("開始儲存簽名...", { 簽名數量: signatures.length });
-
-      // 確保用戶有 session（匿名登入）
       const { data: sessionData } = await supabase.auth.getSession();
       if (!sessionData.session) {
-        console.log("沒有 session，執行匿名登入...");
         const { error: authError } = await supabase.auth.signInAnonymously();
         if (authError) {
-          console.error("匿名登入失敗:", authError);
           throw authError;
         }
-        console.log("匿名登入成功");
-      } else {
-        console.log("已有 session，繼續執行");
       }
 
       const pdfBytes = await applySignaturesToPdf();
-      console.log("PDF 處理完成，大小:", pdfBytes.byteLength, "bytes");
 
       const { error: uploadError } = await supabase.storage
         .from("pdfs")
@@ -175,34 +152,22 @@ export const SignPage = () => {
         });
 
       if (uploadError) {
-        console.error("上傳錯誤詳情:", uploadError);
         throw uploadError;
       }
 
-      console.log("PDF 上傳成功");
       setSignatures([]);
 
-      const { data: newFileData, error: urlError } = await supabase.storage
+      const { data: newFileData } = await supabase.storage
         .from("pdfs")
         .createSignedUrl(pdfDocument.file_path, 3600);
 
-      if (urlError) {
-        console.error("獲取新 URL 錯誤:", urlError);
-      }
-
       if (newFileData) {
         setPdfUrl(newFileData.signedUrl);
-        console.log("新 PDF URL 已設置");
       }
 
       toast.success("簽名已合併到 PDF！");
     } catch (error) {
-      console.error("儲存簽名時發生錯誤:", error);
-
-      // 提供更詳細的錯誤訊息
       if (error instanceof Error) {
-        console.error("錯誤訊息:", error.message);
-        console.error("錯誤堆疊:", error.stack);
         toast.error(`儲存失敗: ${error.message}`);
       } else {
         toast.error("儲存失敗，請重試");
@@ -211,10 +176,8 @@ export const SignPage = () => {
   };
 
   const handleSignatureSave = (dataUrl: string) => {
-    // 創建一個臨時圖片來獲取簽名的實際尺寸
     const img = new Image();
     img.onload = () => {
-      // 根據簽名圖片的原始比例計算初始尺寸
       const aspectRatio = img.width / img.height;
       const initialHeight = 100;
       const initialWidth = initialHeight * aspectRatio;
@@ -233,8 +196,6 @@ export const SignPage = () => {
       toast.success("簽名已添加，您可以拖動調整位置");
     };
     img.onerror = () => {
-      // 如果圖片載入失敗，使用預設尺寸
-      console.error("簽名圖片載入失敗");
       const newSignature = {
         dataUrl,
         x: 100,
@@ -259,7 +220,6 @@ export const SignPage = () => {
           const sig = prev[draggingIndex];
           if (!sig) return prev;
 
-          // 檢查滑鼠/觸控在哪一頁
           let targetPage = sig.page;
           let targetX = sig.x;
           let targetY = sig.y;
@@ -296,7 +256,6 @@ export const SignPage = () => {
           let newWidth = resizeStart.width + deltaX;
           let newHeight = newWidth / aspectRatio;
 
-          // 最小尺寸限制
           if (newWidth < 50) {
             newWidth = 50;
             newHeight = newWidth / aspectRatio;
@@ -323,7 +282,6 @@ export const SignPage = () => {
     const handleEnd = () => {
       setDraggingIndex(null);
       setResizingIndex(null);
-      // 延遲重置 isDragging，避免立即觸發點擊事件
       setTimeout(() => setIsDragging(false), 50);
     };
 
@@ -371,7 +329,6 @@ export const SignPage = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    // 手機上觸控時直接選中
     setSelectedIndex(index);
 
     const sig = signatures[index];
@@ -435,7 +392,6 @@ export const SignPage = () => {
       return;
     }
 
-    // 檢查是否有未保存的簽名
     if (signatures.length > 0) {
       toast.error("您有未保存的簽名，請先點擊「儲存」按鈕");
       return;
@@ -461,55 +417,41 @@ export const SignPage = () => {
       link.click();
       URL.revokeObjectURL(url);
 
-      // 如果使用者選擇下載後刪除
       if (deleteAfter && pdfDocument?.file_path) {
-        // 確保用戶有 session（匿名登入）
         const { data: sessionData } = await supabase.auth.getSession();
         if (!sessionData.session) {
-          console.log("沒有 session，執行匿名登入以進行刪除...");
           const { error: authError } = await supabase.auth.signInAnonymously();
           if (authError) {
-            console.error("匿名登入失敗:", authError);
             toast.error("無法刪除檔案，請手動處理");
             return;
           }
         }
 
-        // 先刪除 Database 中的記錄
         const { error: deleteDbError } = await supabase
           .from("documents")
           .delete()
           .eq("share_id", shareId);
 
         if (deleteDbError) {
-          console.error("刪除資料庫記錄錯誤:", deleteDbError);
           toast.error("刪除失敗，請重試");
           return;
-        } else {
-          console.log("資料庫記錄已刪除");
         }
 
-        // 再刪除 Storage 中的檔案
-        const { data: deleteData, error: deleteStorageError } = await supabase.storage
+        const { error: deleteStorageError } = await supabase.storage
           .from("pdfs")
           .remove([pdfDocument.file_path]);
 
         if (deleteStorageError) {
-          console.error("刪除 Storage 檔案錯誤:", deleteStorageError);
           toast.error("刪除檔案失敗，請重試");
           return;
-        } else {
-          console.log("檔案已從 Storage 刪除:", deleteData);
         }
 
         toast.success("PDF 已下載，檔案已刪除！");
-        // 跳轉回首頁
         setTimeout(() => navigate("/"), 1500);
       } else {
         toast.success("PDF 已下載！");
       }
     } catch (error) {
-      console.error("Error downloading PDF:", error);
       toast.error("下載失敗，請重試");
     } finally {
       setDownloading(false);
@@ -593,7 +535,7 @@ export const SignPage = () => {
               </p>
               <div className="flex flex-col gap-3 pt-2">
                 <Button
-                  onClick={() => handleDownload(true)}
+                  onClick={() => handleDownload(false)}
                   disabled={downloading}
                   className="w-full gap-2 bg-gradient-to-r from-primary to-primary-glow hover:opacity-90"
                 >
@@ -602,10 +544,10 @@ export const SignPage = () => {
                   ) : (
                     <Download className="w-4 h-4" />
                   )}
-                  下載（刪除檔案）
+                  下載（保留檔案）
                 </Button>
                 <Button
-                  onClick={() => handleDownload(false)}
+                  onClick={() => handleDownload(true)}
                   disabled={downloading}
                   variant="outline"
                   className="w-full gap-2 border-2"
@@ -615,7 +557,7 @@ export const SignPage = () => {
                   ) : (
                     <Download className="w-4 h-4" />
                   )}
-                  下載（保留檔案）
+                  下載（刪除檔案）
                 </Button>
                 <Button
                   onClick={() => setShowDownloadDialog(false)}

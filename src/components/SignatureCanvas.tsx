@@ -21,15 +21,10 @@ export const SignatureCanvas = ({ onSave, onCancel }: SignatureCanvasProps) => {
   const handleSave = () => {
     if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
       try {
-        // 獲取實際繪製內容（去除空白區域）
         const trimmedCanvas = sigCanvas.current.getTrimmedCanvas();
-
-        // 使用裁剪後的畫布，確保只包含簽名內容
         const dataUrl = trimmedCanvas.toDataURL("image/png");
         onSave(dataUrl);
       } catch (error) {
-        console.error("裁剪簽名失敗，使用原始畫布:", error);
-        // 如果裁剪失敗，使用原始畫布
         const dataUrl = sigCanvas.current.toDataURL("image/png");
         onSave(dataUrl);
       }

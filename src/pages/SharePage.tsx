@@ -27,7 +27,6 @@ export const SharePage = () => {
         if (error) throw error;
         setDocument(data);
       } catch (error) {
-        console.error("Error fetching document:", error);
         toast.error("找不到文件");
         navigate("/");
       } finally {
@@ -46,7 +45,6 @@ export const SharePage = () => {
       toast.success("連結已複製！");
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error("Failed to copy:", error);
       toast.error("複製失敗，請手動複製");
     }
   };
