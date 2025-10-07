@@ -134,14 +134,6 @@ export const SignPage = () => {
     }
 
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        const { error: authError } = await supabase.auth.signInAnonymously();
-        if (authError) {
-          throw authError;
-        }
-      }
-
       const pdfBytes = await applySignaturesToPdf();
 
       const { error: uploadError } = await supabase.storage
@@ -404,15 +396,6 @@ export const SignPage = () => {
       URL.revokeObjectURL(url);
 
       if (deleteAfter && pdfDocument?.file_path) {
-        const { data: sessionData } = await supabase.auth.getSession();
-        if (!sessionData.session) {
-          const { error: authError } = await supabase.auth.signInAnonymously();
-          if (authError) {
-            toast.error("Unable to delete file, please handle manually");
-            return;
-          }
-        }
-
         const { error: deleteDbError } = await supabase
           .from("documents")
           .delete()

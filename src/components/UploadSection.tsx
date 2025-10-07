@@ -26,12 +26,6 @@ export const UploadSection = () => {
     setUploading(true);
 
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        const { error: authError } = await supabase.auth.signInAnonymously();
-        if (authError) throw authError;
-      }
-
       const shareId = nanoid(16);
       const sharedFileName = `d${shareId}.pdf`;
 
