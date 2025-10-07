@@ -4,9 +4,9 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { PDFDocument } from "pdf-lib";
 import { Button } from "@/components/ui/button";
 import { SignatureCanvas } from "@/components/SignatureCanvas";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Download, PenTool, Loader2, X, FileSignature } from "lucide-react";
+import supabase from "@/integrations/supabase/client";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
@@ -188,20 +188,6 @@ export const SignPage = () => {
         y: 100,
         width: initialWidth,
         height: initialHeight,
-        page: 1,
-      };
-      setSignatures([...signatures, newSignature]);
-      setSelectedIndex(signatures.length);
-      setShowSignatureCanvas(false);
-      toast.success("Signature added, you can drag to adjust position");
-    };
-    img.onerror = () => {
-      const newSignature = {
-        dataUrl,
-        x: 100,
-        y: 100,
-        width: 200,
-        height: 100,
         page: 1,
       };
       setSignatures([...signatures, newSignature]);

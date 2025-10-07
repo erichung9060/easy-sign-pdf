@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Copy, Check, Download, FileSignature } from "lucide-react";
+import { Copy, Check, FileSignature } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import supabase from "@/integrations/supabase/client";
 
 export const SharePage = () => {
   const { shareId } = useParams<{ shareId: string }>();

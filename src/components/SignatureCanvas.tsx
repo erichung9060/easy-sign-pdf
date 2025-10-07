@@ -45,14 +45,8 @@ export const SignatureCanvas = ({ onSave, onCancel }: SignatureCanvasProps) => {
 
   const handleSave = () => {
     if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
-      try {
-        const trimmedCanvas = sigCanvas.current.getTrimmedCanvas();
-        const dataUrl = trimmedCanvas.toDataURL("image/png");
-        onSave(dataUrl);
-      } catch (error) {
-        const dataUrl = sigCanvas.current.toDataURL("image/png");
-        onSave(dataUrl);
-      }
+      const dataUrl = sigCanvas.current.toDataURL("image/png");
+      onSave(dataUrl);
     }
   };
 
