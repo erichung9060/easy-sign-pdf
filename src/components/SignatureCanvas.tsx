@@ -49,6 +49,10 @@ export const SignatureCanvas = ({ onSave, onCancel }: SignatureCanvasProps) => {
           onEnd={() => setIsEmpty(false)}
           clearOnResize={false}
           penColor="rgb(0, 0, 0)"
+          minWidth={1.5}
+          maxWidth={3.5}
+          velocityFilterWeight={0.7}
+          throttle={16}
         />
       </div>
 
