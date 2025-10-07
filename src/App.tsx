@@ -7,7 +7,7 @@ import { SignPage } from "./pages/SignPage";
 const App = () => (
   <>
     <Sonner />
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/share/:shareId" element={<SharePage />} />
