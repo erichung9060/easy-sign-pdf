@@ -27,7 +27,7 @@ export const SharePage = () => {
         if (error) throw error;
         setDocument(data);
       } catch (error) {
-        toast.error("找不到文件");
+        toast.error("Document not found");
         navigate("/");
       } finally {
         setLoading(false);
@@ -42,10 +42,10 @@ export const SharePage = () => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      toast.success("連結已複製！");
+      toast.success("Link copied!");
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      toast.error("複製失敗，請手動複製");
+      toast.error("Copy failed, please copy manually");
     }
   };
 
@@ -69,17 +69,17 @@ export const SharePage = () => {
         </button>
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-            檔案上傳成功！
+            File Uploaded Successfully!
           </h1>
           <p className="text-muted-foreground text-lg">
-            複製下方連結並分享給需要簽名的人
+            Copy the link below and share it with those who need to sign
           </p>
         </div>
 
         <Card className="p-8 space-y-6 shadow-xl border-2">
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground">
-              檔案名稱
+              File Name
             </label>
             <div className="p-4 bg-muted rounded-lg">
               <p className="font-mono text-foreground">{document?.file_name}</p>
@@ -88,7 +88,7 @@ export const SharePage = () => {
 
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground">
-              分享連結
+              Share Link
             </label>
             <div className="flex gap-2">
               <input
@@ -105,12 +105,12 @@ export const SharePage = () => {
                 {copied ? (
                   <>
                     <Check className="w-4 h-4" />
-                    已複製
+                    Copied
                   </>
                 ) : (
                   <>
                     <Copy className="w-4 h-4" />
-                    複製
+                    Copy
                   </>
                 )}
               </Button>
@@ -119,7 +119,7 @@ export const SharePage = () => {
 
           <div className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground text-center">
-              ⏰ 此檔案將在 7 天後自動刪除
+              ⏰ This file will be automatically deleted after 7 days
             </p>
           </div>
         </Card>

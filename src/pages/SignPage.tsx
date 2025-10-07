@@ -64,7 +64,7 @@ export const SignPage = () => {
 
         setPdfDocument(data);
       } catch (error) {
-        toast.error("找不到文件");
+        toast.error("Document not found");
         navigate("/");
       } finally {
         setLoading(false);
@@ -129,7 +129,7 @@ export const SignPage = () => {
 
   const handleSaveSignatures = async () => {
     if (!shareId || signatures.length === 0) {
-      toast.error("沒有簽名可儲存");
+      toast.error("No signatures to save");
       return;
     }
 
@@ -165,12 +165,12 @@ export const SignPage = () => {
         setPdfUrl(newFileData.signedUrl);
       }
 
-      toast.success("簽名已合併到 PDF！");
+      toast.success("Signatures saved!");
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(`儲存失敗: ${error.message}`);
+        toast.error(`Save failed: ${error.message}`);
       } else {
-        toast.error("儲存失敗，請重試");
+        toast.error("Save failed, please try again");
       }
     }
   };
@@ -193,7 +193,7 @@ export const SignPage = () => {
       setSignatures([...signatures, newSignature]);
       setSelectedIndex(signatures.length);
       setShowSignatureCanvas(false);
-      toast.success("簽名已添加，您可以拖動調整位置");
+      toast.success("Signature added, you can drag to adjust position");
     };
     img.onerror = () => {
       const newSignature = {
@@ -207,7 +207,7 @@ export const SignPage = () => {
       setSignatures([...signatures, newSignature]);
       setSelectedIndex(signatures.length);
       setShowSignatureCanvas(false);
-      toast.success("簽名已添加，您可以拖動調整位置");
+      toast.success("Signature added, you can drag to adjust position");
     };
     img.src = dataUrl;
   };
@@ -379,7 +379,7 @@ export const SignPage = () => {
 
     setSignatures((prev) => prev.filter((_, i) => i !== index));
     setSelectedIndex(null);
-    toast.success("簽名已刪除");
+    toast.success("Signature deleted");
   };
 
   const handleContainerClick = () => {
@@ -388,12 +388,12 @@ export const SignPage = () => {
 
   const handleDownloadClick = () => {
     if (!pdfUrl) {
-      toast.error("PDF 尚未載入");
+      toast.error("PDF not loaded yet");
       return;
     }
 
     if (signatures.length > 0) {
-      toast.error("您有未保存的簽名，請先點擊「儲存」按鈕");
+      toast.error("You have unsaved signatures, please click the 'Save' button first");
       return;
     }
 
@@ -422,7 +422,7 @@ export const SignPage = () => {
         if (!sessionData.session) {
           const { error: authError } = await supabase.auth.signInAnonymously();
           if (authError) {
-            toast.error("無法刪除檔案，請手動處理");
+            toast.error("Unable to delete file, please handle manually");
             return;
           }
         }
@@ -433,7 +433,7 @@ export const SignPage = () => {
           .eq("share_id", shareId);
 
         if (deleteDbError) {
-          toast.error("刪除失敗，請重試");
+          toast.error("Delete failed, please try again");
           return;
         }
 
@@ -442,17 +442,17 @@ export const SignPage = () => {
           .remove([pdfDocument.file_path]);
 
         if (deleteStorageError) {
-          toast.error("刪除檔案失敗，請重試");
+          toast.error("Failed to delete file, please try again");
           return;
         }
 
-        toast.success("PDF 已下載，檔案已刪除！");
+        toast.success("PDF downloaded, file deleted!");
         setTimeout(() => navigate("/"), 1500);
       } else {
-        toast.success("PDF 已下載！");
+        toast.success("PDF downloaded!");
       }
     } catch (error) {
-      toast.error("下載失敗，請重試");
+      toast.error("Download failed, please try again");
     } finally {
       setDownloading(false);
     }
@@ -482,7 +482,7 @@ export const SignPage = () => {
               {pdfDocument?.file_name}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              點擊「添加簽名」開始簽署文件
+              Click "Add Signature" to start signing the document
             </p>
           </div>
           <div className="flex gap-3">
@@ -491,7 +491,7 @@ export const SignPage = () => {
               className="gap-2 bg-gradient-to-r from-primary to-primary-glow hover:opacity-90"
             >
               <PenTool className="w-4 h-4" />
-              添加簽名
+              Add Signature
             </Button>
             <Button
               onClick={handleSaveSignatures}
@@ -499,7 +499,7 @@ export const SignPage = () => {
               variant="outline"
               className="gap-2 border-2"
             >
-              儲存
+              Save
             </Button>
             <Button
               onClick={handleDownloadClick}
@@ -512,7 +512,7 @@ export const SignPage = () => {
               ) : (
                 <Download className="w-4 h-4" />
               )}
-              下載 PDF
+              Download PDF
             </Button>
           </div>
         </div>
@@ -529,9 +529,9 @@ export const SignPage = () => {
         {showDownloadDialog && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-card p-6 rounded-xl shadow-xl border-2 max-w-md w-full space-y-4">
-              <h2 className="text-xl font-bold text-foreground">下載 PDF</h2>
+              <h2 className="text-xl font-bold text-foreground">Download PDF</h2>
               <p className="text-sm text-muted-foreground">
-                您希望下載後如何處理此檔案？
+                How would you like to handle this file after downloading?
               </p>
               <div className="flex flex-col gap-3 pt-2">
                 <Button
@@ -544,20 +544,20 @@ export const SignPage = () => {
                   ) : (
                     <Download className="w-4 h-4" />
                   )}
-                  下載（保留檔案）
+                  Download (Keep File)
                 </Button>
                 <Button
                   onClick={() => handleDownload(true)}
                   disabled={downloading}
                   variant="outline"
-                  className="w-full gap-2 border-2"
+                  className="w-full gap-2 border-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
                 >
                   {downloading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Download className="w-4 h-4" />
                   )}
-                  下載（刪除檔案）
+                  Download (Delete File)
                 </Button>
                 <Button
                   onClick={() => setShowDownloadDialog(false)}
@@ -565,7 +565,7 @@ export const SignPage = () => {
                   className="w-full"
                   disabled={downloading}
                 >
-                  取消
+                  Cancel
                 </Button>
               </div>
             </div>

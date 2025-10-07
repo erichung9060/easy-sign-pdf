@@ -14,12 +14,12 @@ export const UploadSection = () => {
 
   const handleFile = async (file: File) => {
     if (file.type !== "application/pdf") {
-      toast.error("請上傳 PDF 檔案");
+      toast.error("Please upload a PDF file");
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      toast.error("檔案大小不能超過 10MB");
+      toast.error("File size cannot exceed 10MB");
       return;
     }
 
@@ -41,7 +41,7 @@ export const UploadSection = () => {
 
       if (uploadError) {
         if (uploadError.message.includes('policy')) {
-          toast.error("您今日已達上傳限制（10次），請明天再試");
+          toast.error("You have reached today's upload limit (10 times), please try again tomorrow");
           return;
         }
         throw uploadError;
@@ -57,10 +57,10 @@ export const UploadSection = () => {
 
       if (dbError) throw dbError;
 
-      toast.success("檔案上傳成功！");
+      toast.success("File uploaded successfully!");
       navigate(`/share/${shareId}`);
     } catch (error) {
-      toast.error("上傳失敗，請重試");
+      toast.error("Upload failed, please try again");
     } finally {
       setUploading(false);
     }
@@ -122,10 +122,10 @@ export const UploadSection = () => {
 
         <div className="text-center space-y-2">
           <h3 className="text-2xl font-bold text-foreground">
-            上傳 PDF 檔案
+            Upload PDF File
           </h3>
           <p className="text-muted-foreground max-w-md">
-            拖放檔案到這裡，或點擊下方按鈕選擇檔案。檔案會安全保存 7 天。
+            Drag and drop files here, or click the button below to select files. Files will be securely stored for 7 days.
           </p>
         </div>
 
@@ -138,7 +138,7 @@ export const UploadSection = () => {
             className="bg-gradient-to-r from-primary to-primary-glow hover:opacity-90 transition-opacity"
           >
             <FileText className="w-5 h-5 mr-2" />
-            選擇檔案
+            Select File
           </Button>
           <input
             id="file-upload"
@@ -148,7 +148,7 @@ export const UploadSection = () => {
             className="hidden"
           />
           <span className="text-sm text-muted-foreground">
-            最大檔案大小：10MB
+            Maximum file size: 10MB
           </span>
         </div>
       </div>

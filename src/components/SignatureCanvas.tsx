@@ -34,9 +34,9 @@ export const SignatureCanvas = ({ onSave, onCancel }: SignatureCanvasProps) => {
   return (
     <Card className="p-6 space-y-4 max-w-2xl mx-auto border-2 shadow-xl">
       <div className="space-y-2">
-        <h3 className="text-xl font-semibold text-foreground">繪製您的簽名</h3>
+        <h3 className="text-xl font-semibold text-foreground">Draw Your Signature</h3>
         <p className="text-sm text-muted-foreground">
-          在下方白色區域繪製您的簽名
+          Draw your signature in the white area below
         </p>
       </div>
 
@@ -59,7 +59,7 @@ export const SignatureCanvas = ({ onSave, onCancel }: SignatureCanvasProps) => {
           className="gap-2"
         >
           <X className="w-4 h-4" />
-          取消
+          Cancel
         </Button>
         <Button
           variant="outline"
@@ -68,7 +68,7 @@ export const SignatureCanvas = ({ onSave, onCancel }: SignatureCanvasProps) => {
           className="gap-2"
         >
           <Eraser className="w-4 h-4" />
-          清除
+          Clear
         </Button>
         <Button
           onClick={handleSave}
@@ -76,7 +76,7 @@ export const SignatureCanvas = ({ onSave, onCancel }: SignatureCanvasProps) => {
           className="gap-2 bg-gradient-to-r from-accent to-accent/80 hover:opacity-90"
         >
           <Check className="w-4 h-4" />
-          確認簽名
+          Confirm Signature
         </Button>
       </div>
     </Card>

@@ -20,7 +20,7 @@ const Index = () => {
               Sign PDF Easily
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
-              安全、簡單、快速的線上 PDF 簽名平台
+              Secure, Simple, and Fast Online PDF Signing Platform
             </p>
           </div>
         </header>
@@ -33,9 +33,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center mb-4">
                 <span className="text-2xl text-primary-foreground font-bold">1</span>
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">上傳 PDF</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Upload PDF</h3>
               <p className="text-sm text-muted-foreground">
-                選擇或拖放您的 PDF 檔案，快速上傳到安全雲端
+                Select or drag and drop your PDF file for quick and secure upload to the cloud
               </p>
             </div>
 
@@ -43,9 +43,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center mb-4">
                 <span className="text-2xl text-primary-foreground font-bold">2</span>
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">分享連結</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Share Link</h3>
               <p className="text-sm text-muted-foreground">
-                複製安全分享連結，傳送給需要簽署的人員
+                Copy the secure sharing link and send it to those who need to sign
               </p>
             </div>
 
@@ -53,20 +53,20 @@ const Index = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-accent to-accent/80 rounded-lg flex items-center justify-center mb-4">
                 <span className="text-2xl text-accent-foreground font-bold">3</span>
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">簽名下載</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">Sign & Download</h3>
               <p className="text-sm text-muted-foreground">
-                手繪簽名、調整位置，完成後立即下載
+                Draw your signature, adjust position, and download instantly
               </p>
             </div>
           </div>
 
           <div className="bg-card/50 backdrop-blur-sm p-8 rounded-xl border-2 border-primary/20">
             <div className="max-w-3xl mx-auto space-y-4 text-center">
-              <h2 className="text-2xl font-bold text-foreground">🔒 安全保障</h2>
+              <h2 className="text-2xl font-bold text-foreground">🔒 Security Guarantee</h2>
               <ul className="space-y-2 text-muted-foreground">
-                <li>✓ 所有檔案加密傳輸與儲存</li>
-                <li>✓ 分享連結採用隨機生成，無法被猜測</li>
-                <li>✓ 檔案自動於 7 天後刪除，保護隱私</li>
+                <li>✓ All files are encrypted during transmission and storage</li>
+                <li>✓ Share links are randomly generated and unpredictable</li>
+                <li>✓ Files are automatically deleted after 7 days to protect privacy</li>
               </ul>
             </div>
           </div>
