@@ -485,10 +485,10 @@ export const SignPage = () => {
               Click "Add Signature" to start signing the document
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3 w-full sm:w-auto">
             <Button
               onClick={() => setShowSignatureCanvas(true)}
-              className="gap-2 bg-gradient-to-r from-primary to-primary-glow hover:opacity-90"
+              className="gap-2 bg-gradient-to-r from-primary to-primary-glow hover:opacity-90 flex-1 sm:flex-none"
             >
               <PenTool className="w-4 h-4" />
               Add Signature
@@ -497,7 +497,7 @@ export const SignPage = () => {
               onClick={handleSaveSignatures}
               disabled={signatures.length === 0}
               variant="outline"
-              className="gap-2 border-2"
+              className="gap-2 border-2 flex-1 sm:flex-none"
             >
               Save
             </Button>
@@ -505,7 +505,7 @@ export const SignPage = () => {
               onClick={handleDownloadClick}
               disabled={downloading}
               variant="outline"
-              className="gap-2 border-2"
+              className="gap-2 border-2 flex-1 sm:flex-none"
             >
               {downloading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -518,11 +518,13 @@ export const SignPage = () => {
         </div>
 
         {showSignatureCanvas && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <SignatureCanvas
-              onSave={handleSignatureSave}
-              onCancel={() => setShowSignatureCanvas(false)}
-            />
+          <div className="fixed inset-0 bg-black/50 flex items-start justify-center p-4 z-50 overflow-y-auto">
+            <div className="w-full my-auto">
+              <SignatureCanvas
+                onSave={handleSignatureSave}
+                onCancel={() => setShowSignatureCanvas(false)}
+              />
+            </div>
           </div>
         )}
 
