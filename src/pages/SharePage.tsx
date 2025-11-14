@@ -119,7 +119,7 @@ export const SharePage = () => {
 
           <div className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground text-center">
-              ⏰ This file will be automatically deleted after 7 days
+              ⏰ This file will be automatically deleted after 14 days
             </p>
           </div>
         </Card>

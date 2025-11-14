@@ -119,7 +119,7 @@ export const UploadSection = () => {
             Upload PDF File
           </h3>
           <p className="text-muted-foreground max-w-md">
-            Drag and drop files here, or click the button below to select files. Files will be securely stored for 7 days.
+            Drag and drop files here, or click the button below to select files. Files will be securely stored for 14 days.
           </p>
         </div>
 
