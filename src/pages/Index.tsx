@@ -66,7 +66,7 @@ const Index = () => {
               <ul className="space-y-2 text-muted-foreground">
                 <li>✓ All files are encrypted during transmission and storage</li>
                 <li>✓ Share links are randomly generated and unpredictable</li>
-                <li>✓ Files are automatically deleted after 7 days to protect privacy</li>
+                <li>✓ Files are automatically deleted after 14 days to protect privacy</li>
               </ul>
             </div>
           </div>
